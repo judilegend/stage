@@ -1,41 +1,51 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../services/authService";
+import { setToken } from "../store/authSlice";
 
-//strucutre du props
-interface AuthFormProps {
-  onSubmit: (email: string, password: string) => void;
-  buttonText: string;
-}
-
-const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, buttonText }) => {
+const AuthForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(email, password);
+    try {
+      const response = await login(email, password);
+      dispatch(setToken(response.token));
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleLogin}
+      className="bg-white p-8 rounded shadow-md w-96"
+    >
+      <h1 className="text-2xl mb-4">Login</h1>
       <input
-        type="text"
+        type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Username"
-        className="w-full p-2 border rounded"
+        placeholder="Email"
+        className="w-full p-2 mb-4 border rounded"
       />
       <input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
-        className="w-full p-2 border rounded"
+        className="w-full p-2 mb-4 border rounded"
       />
       <button
         type="submit"
         className="w-full p-2 bg-blue-500 text-white rounded"
       >
-        {buttonText}
+        Login
       </button>
     </form>
   );
