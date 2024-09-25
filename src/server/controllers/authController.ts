@@ -1,70 +1,24 @@
 import { Request, Response } from "express";
-const jwt = require("jsonwebtoken");
-import User from "../models/userModel";
+import * as authService from "../services/authservice";
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
-    let user = await User.findOne({ email });
-    //si exist user
-    if (user) {
-      return res.status(400).json({ msg: "L'email est déjà utilisé" });
-    }
-    user = new User({
-      username,
-      email,
-      password,
-    });
-    await user.save();
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET || "secretkey",
-      { expiresIn: 3600 },
-      (err: any, token: any) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
+    const user = await authService.registerUser(username, email, password);
+    res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Erreur serveur lors de register");
+    res
+      .status(400)
+      .json({ message: "Registration failed", error: error.message });
   }
 };
+
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    //email not found
-    if (!user) {
-      return res.status(401).json({ msg: "Utilisateur non trouvé" });
-    }
-    const isMatch = await user.comparePassword(password);
-    //password is not correct
-    if (!isMatch) {
-      return res.status(401).json({ msg: "Mot de passe incorrect" });
-    }
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET || "secretkey",
-      { expiresIn: 3600 },
-      (err: any, token: any) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
+    const { user, token } = await authService.loginUser(email, password);
+    res.json({ message: "Login successful", user, token });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Erreur serveur lors de login");
+    res.status(401).json({ message: "Login failed", error: error.message });
   }
 };
