@@ -23,32 +23,34 @@ const AuthForm: React.FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="bg-white p-8 rounded shadow-md w-96"
-    >
-      <h1 className="text-2xl mb-4">Login</h1>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        className="w-full p-2 mb-4 border rounded"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="w-full p-2 mb-4 border rounded"
-      />
-      <button
-        type="submit"
-        className="w-full p-2 bg-blue-500 text-white rounded"
+    <div className="flex items-center justify-center h-screen">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 rounded shadow-md w-96"
       >
-        Login
-      </button>
-    </form>
+        <h1 className="text-2xl mb-4">Login</h1>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full p-2 mb-4 border rounded"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="w-full p-2 mb-4 border rounded"
+        />
+        <button
+          type="submit"
+          className="w-full p-2 bg-blue-500 text-white rounded"
+        >
+          Login
+        </button>
+      </form>
+    </div>
   );
 };
 
