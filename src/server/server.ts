@@ -3,11 +3,12 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import sequelize from "./config/database";
-
+const cors = require("cors");
 dotenv.config();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

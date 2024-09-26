@@ -45,10 +45,21 @@ User.init(
       type: DataTypes.ENUM("user", "admin"),
       defaultValue: "user",
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: "users",
     sequelize,
+    timestamps: true,
     hooks: {
       beforeCreate: async (user: User) => {
         const salt = await bcrypt.genSalt(10);

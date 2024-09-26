@@ -9,12 +9,13 @@ const AuthForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  // const token = setToken();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const response = await login(email, password);
-      dispatch(setToken(response.token));
+      dispatch(setToken(response?.token));
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
